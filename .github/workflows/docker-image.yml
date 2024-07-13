@@ -18,7 +18,7 @@ jobs:
       env:
         IMAGE_NAME_1: postgres
       run: |
-        docker build . --file Dockerfile.postgres --tag postgres:$(date +%s)
+        docker build . --file Dockerfile.postgres --tag postgres:18
 
     - name: Build and push second Docker image
       env:
