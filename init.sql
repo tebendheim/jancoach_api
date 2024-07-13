@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 
-INSERT INTO users (name, email) VALUES ('Tom-elbin', 'tomelbin94@gmail.com')
+INSERT INTO users (name, email) VALUES ('Tom-elbin', 'tomelbin94@gmail.com');
 
 
 
