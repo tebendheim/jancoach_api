@@ -37,9 +37,18 @@ app.use(express.json());
 //     res.json("CORRECT");
 // });
 
-app.get("/", async (req:Request, res:Response) => {
-    db.query("select * from users;", (err, result) =>{
-        res.json(result.rows);
+app.get("/", async (req: Request, res: Response) => {
+    db.query("SELECT * FROM users;", async (err, result) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+        if (result && result.rows) {
+            return res.json(result.rows);
+        } else {
+            console.error('Query result is undefined or empty');
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
     });
 });
 
