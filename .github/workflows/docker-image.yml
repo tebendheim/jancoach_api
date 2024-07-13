@@ -14,17 +14,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: bild first docker image
+      env:
+        IMAGE_NAME_1: postgres
+      run: |
+        docker build . --file Dockerfile.postgres --tag postgres:$(date +%s)
 
-        env:
-          IMAGE_NAME_1: postgres
-        run: |
-          docker build . --file Dockerfile.postgres --tag postgres:$(date +%s)
-
-      - name: Build and push second Docker image
-        env:
-          IMAGE_NAME_2: node
-        run: |
-          docker build . --file Dockerfile.node --tag node:$(date +%s).
-          docker push node
+    - name: Build and push second Docker image
+      env:
+        IMAGE_NAME_2: node
+      run: |
+        docker build . --file Dockerfile.node --tag node:$(date +%s).
+        docker push node
