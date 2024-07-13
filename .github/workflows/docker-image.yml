@@ -2,34 +2,29 @@ name: Docker Image CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
-  build-and-push:
+
+  build:
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Login to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Build and push first Docker image
         env:
-          IMAGE_NAME_1: ghcr.io/${{ github.repository_owner }}/PostgresJanCoach:latest
+          IMAGE_NAME_1: postgres
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.postgres -t $IMAGE_NAME_1 .
-          docker push $IMAGE_NAME_1
+          docker build . --file Dockerfile.postgres --tag postgres:$(date +%s)
 
       - name: Build and push second Docker image
         env:
-          IMAGE_NAME_2: ghcr.io/${{ github.repository_owner }}/NodeJanCoach:latest
+          IMAGE_NAME_2: node
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.node -t $IMAGE_NAME_2 .
-          docker push $IMAGE_NAME_2
+          docker build . --file Dockerfile.node --tag node:$(date +%s).
+          docker push node
