@@ -1,20 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: postgres
+  name: myapp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app: myapp
   template:
     metadata:
       labels:
-        app: postgres
+        app: myapp
     spec:
       containers:
-        - name: postgres
-          image: postgres:15
+        - name: myapp
+          image: tebendheim/jancoach_api-app:latest
+          ports:
+            - containerPort: 80
           env:
             - name: POSTGRES_USER
               valueFrom:
@@ -32,6 +34,6 @@ spec:
                   name: postgres-secret
                   key: POSTGRES_DB
             - name: POSTGRES_HOST
-              value: postgres-service
-          ports:
-            - containerPort: 5432
+              value: "postgres-service"
+            - name: POSTGRES_PORT
+              value: "5432"
