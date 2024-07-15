@@ -25,9 +25,9 @@ jobs:
 
       - name: Pull official PostgreSQL image
         run: |
-          docker pull postgres:18
-          docker tag postgres:18 ghcr.io/${{ github.repository_owner }}/postgres:18
-          docker push ghcr.io/${{ github.repository_owner }}/postgres:18
+          docker pull postgres:latest
+          docker tag postgres:latest ghcr.io/${{ github.repository_owner }}/postgres:latest
+          docker push ghcr.io/${{ github.repository_owner }}/postgres:latest
 
       - name: Build and push Node.js Docker image
         run: |
