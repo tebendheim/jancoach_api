@@ -12,6 +12,38 @@ spec:
       labels:
         app: postgres
     spec:
+      initContainers:
+        - name: init-db
+          image: postgres:15
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_DB
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              until pg_isready -h postgres-service -p 5432; do
+                echo "Waiting for PostgreSQL to be ready..."
+                sleep 2
+              done
+              echo "Executing init.sql script..."
+              PGPASSWORD="${POSTGRES_PASSWORD}" psql -h postgres-service -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -f /docker-entrypoint-initdb.d/init.sql
+          volumeMounts:
+            - name: init-sql-volume
+              mountPath: /docker-entrypoint-initdb.d
       containers:
         - name: postgres
           image: postgres:15
@@ -35,3 +67,10 @@ spec:
               value: postgres-service
           ports:
             - containerPort: 5432
+          volumeMounts:
+            - name: init-sql-volume
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: init-sql-volume
+          configMap:
+            name: init-sql-config
