@@ -21,7 +21,10 @@ services:
       - /app/node_modules
 
   postgres:
-    image: postgres:15
+    # image: postgres:15
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -30,7 +33,7 @@ services:
     # command: ["bash", "-c", "/docker-entrypoint-initdb.d/init.sh"]
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sh:/docker-entrypoint-initdb.d/init.sh
+      # - ./init.sh:/docker-entrypoint-initdb.d/init.sh
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
     env_file:
