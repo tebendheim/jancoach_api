@@ -1,9 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres
 spec:
   replicas: 1
+  serviceName: postgres
   selector:
     matchLabels:
       app: postgres
@@ -35,12 +36,12 @@ spec:
             - "/bin/sh"
             - "-c"
             - |
-              until pg_isready -h postgres-service -p 5432; do
+              until pg_isready -h localhost -p 5432; do
                 echo "Waiting for PostgreSQL to be ready..."
                 sleep 2
               done
               echo "Executing init.sql script..."
-              PGPASSWORD="${POSTGRES_PASSWORD}" psql -h postgres-service -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -f /docker-entrypoint-initdb.d/init.sql
+              PGPASSWORD="${POSTGRES_PASSWORD}" psql -h localhost -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -f /docker-entrypoint-initdb.d/init.sql
           volumeMounts:
             - name: init-sql-volume
               mountPath: /docker-entrypoint-initdb.d
