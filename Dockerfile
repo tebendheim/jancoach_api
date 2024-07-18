@@ -5,8 +5,6 @@ WORKDIR /app
 COPY package*.json ./
 RUN yarn
 
-RUN apt-get update && apt-get install -y postgresql-client
-
 COPY . .
 
 # Install ts-node-dev globally
