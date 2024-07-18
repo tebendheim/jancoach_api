@@ -32,7 +32,6 @@ jobs:
           docker pull postgres:latest
           docker tag postgres:latest ghcr.io/${{ github.repository_owner }}/postgres:latest
           docker push ghcr.io/${{ github.repository_owner }}/postgres:latest
-
       - name: Build and push Node.js Docker image
         run: |
           IMAGE_TAG=jancoach_api:$(date +%s)
