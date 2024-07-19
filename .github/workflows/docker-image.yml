@@ -37,8 +37,3 @@ jobs:
           IMAGE_TAG=jancoach_api:$(date +%s)
           docker build . --file Dockerfile --tag ghcr.io/${{ github.repository_owner }}/${IMAGE_TAG}
           docker push ghcr.io/${{ github.repository_owner }}/${IMAGE_TAG}
-      - name: build and push custome postgres image
-        run: |
-          IMAGE_TAG:jancoach_api_postgres:$(date +%s)
-          docker build . --file Dockerfile.postgres --tag ghcr.io/${{github.repository_owner}}/${IMAGE_TAG}
-          docker push ghcr.io/${{github.repository_owner}}/${IMAGE_TAG}
