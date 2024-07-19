@@ -3,7 +3,7 @@ kind: StatefulSet
 metadata:
   name: postgres
 spec:
-  serviceName: postgres
+  serviceName: "postgres"
   replicas: 1
   selector:
     matchLabels:
@@ -13,31 +13,11 @@ spec:
       labels:
         app: postgres
     spec:
-      initContainers:
-        - name: init-db
-          image: postgres:15
-          env:
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_PASSWORD
-            - name: POSTGRES_DB
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_DB
-          volumeMounts:
-            - name: postgres-storage
-              mountPath: /var/lib/postgresql/data
       containers:
         - name: postgres
-          image: tebendheim/jancoach_api-postgres-1:latest
+          image: ghcr.io/tebendheim/jancoach_postgres:latest
+          ports:
+            - containerPort: 5432
           env:
             - name: POSTGRES_USER
               valueFrom:
@@ -54,12 +34,15 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: POSTGRES_DB
-          ports:
-            - containerPort: 5432
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
+            - name: initdb-volume
+              mountPath: /docker-entrypoint-initdb.d/
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:
             claimName: postgres-pvc
+        - name: initdb-volume
+          configMap:
+            name: initdb-config

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: myapp
-          image: tebendheim/jancoach_api-app:latest
+          image: ghcr.io/tebendheim/jancoach_api:latest
           ports:
             - containerPort: 80
           env:
