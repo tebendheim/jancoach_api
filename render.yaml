@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: my-kubernetes-app
+    env: kubernetes
+    repo: https://github.com/tebendheim/jancoach_api
+    branch: main
+    region: oregon
+    kubernetesYamlPath: k8s/
